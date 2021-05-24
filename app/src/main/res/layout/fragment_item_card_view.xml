@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="180dp"
+    android:layout_height="wrap_content"
+    android:id="@+id/game_card">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="8dp">
+        
+        <ImageView
+            android:id="@+id/game_box_art"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="@string/gameBoxArt" />
+
+        <TextView
+            android:id="@+id/game_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/game_title"
+            android:textSize="20sp"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/game_producer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/producer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/add_to_favorite"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:checkable="true"
+                android:contentDescription="@string/add_to_favorite_img_btn"
+                app:checkedIcon="@drawable/ic_favorite"
+                app:checkedIconTint="@color/pink_200"
+                app:chipBackgroundColor="@color/white"
+                app:chipIcon="@drawable/ic_unfavorite"
+                app:chipSurfaceColor="@color/purple_50"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/add_to_played"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:checkable="true"
+                android:contentDescription="@string/add_to_favorite_img_btn"
+                app:checkedIcon="@drawable/ic_played"
+                app:checkedIconTint="@color/pink_200"
+                app:chipBackgroundColor="@color/white"
+                app:chipIcon="@drawable/ic_unplayed"
+                app:chipSurfaceColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/add_to_favorite"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+        
+
+</com.google.android.material.card.MaterialCardView>

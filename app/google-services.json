@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "563754086253",
+    "firebase_url": "https://gamebase-dfb9e-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "gamebase-dfb9e",
+    "storage_bucket": "gamebase-dfb9e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563754086253:android:5747109dfcadc38c05f464",
+        "android_client_info": {
+          "package_name": "com.example.gamebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "563754086253-dq70f7u4ocdvehg8b9gatfiekcc9a98k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gamebase",
+            "certificate_hash": "e37044ceabc0ecc5a399d85d08495c8b6e2a5426"
+          }
+        },
+        {
+          "client_id": "563754086253-c9fgqk0emf52okd7bvhjh2apl5a6tk1o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAT_WMfyPplt2rzv2q-HH8lFvqqSS9T6yc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "563754086253-c9fgqk0emf52okd7bvhjh2apl5a6tk1o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
