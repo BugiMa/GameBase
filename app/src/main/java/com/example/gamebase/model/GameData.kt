@@ -1,8 +1,8 @@
 package com.example.gamebase.model
 
 data class GameData(
-        val key:         String? = "",
-        val title:       String? = "",
+        val key:         String = "",
+        val title:       String = "",
         var genre:       String? = "",
         var releaseYear: String? = "",
         val studio:      String? = "",

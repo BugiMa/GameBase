@@ -5,6 +5,14 @@
 
     <group android:id="@+id/fav_and_pld">
         <item
+            android:id="@+id/search"
+            android:icon="@drawable/ic_search"
+            android:title="@string/search"
+            android:contentDescription="@string/search"
+            app:showAsAction="ifRoom"
+            />
+
+        <item
             android:id="@+id/favorite"
             android:icon="@drawable/ic_favorite"
             android:title="@string/favorite"

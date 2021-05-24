@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -48,6 +49,7 @@ class GameBaseActivity : AppCompatActivity() {
     private lateinit var bottomAppBar: BottomAppBar
     private lateinit var addGameFAB: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
+    private lateinit var searchView: SearchView
 
     //private var mainViewModel.isPlayed: Boolean = false
     //private var mainViewModel.isFavorite: Boolean = false
@@ -96,10 +98,24 @@ class GameBaseActivity : AppCompatActivity() {
         }
 
         iconCheckboxControl() // Function for Icon Tint / Checkbox State Control due to dark mode related restart of this activity
+        setRecycleViewAttr()
 
-        bottomAppBar.setNavigationOnClickListener {
-            // TODO: Search
+        //bottomAppBar.setNavigationOnClickListener {}
+
+        val searchItem = bottomAppBar.menu.findItem(R.id.search)
+        searchView = searchItem.actionView as SearchView
+        // Changing location using searchView with onQueryTextSubmit function
+        val queryTextListener = object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (newText.isNotEmpty()) {
+                    myAdapter.filter.filter(newText)
+                }
+                return true }
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return true
+            }
         }
+        searchView.setOnQueryTextListener(queryTextListener)
 
         bottomAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
@@ -122,7 +138,7 @@ class GameBaseActivity : AppCompatActivity() {
                 R.id.list_mode -> {
                     menuItem.isChecked = !menuItem.isChecked
                     mainViewModel.listMode = menuItem.isChecked
-
+                    setRecycleViewAttr()
                     true
                 }
                 R.id.dark_mode -> {
@@ -249,10 +265,10 @@ class GameBaseActivity : AppCompatActivity() {
         if (menuItem.isChecked)
             menuItem.icon.alpha = 255
         else
-            menuItem.icon.alpha = 128
+            menuItem.icon.alpha = 127
     }
 
-    private fun setRVAttr()
+    private fun setRecycleViewAttr()
     {
         val newAdapter = GameListAdapter(newGameList(), mDbRef, mainViewModel.listMode)
         val newLayoutManager = if (mainViewModel.listMode)  GridLayoutManager(this@GameBaseActivity, 2, LinearLayoutManager.VERTICAL, false)
