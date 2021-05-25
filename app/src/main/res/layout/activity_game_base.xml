@@ -47,7 +47,7 @@
             android:layout_gravity="bottom"
             style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
             app:menu="@menu/bottom_app_bar"
-            app:fabAlignmentMode="center"
+            app:fabAlignmentMode="end"
             app:hideOnScroll="true"
             />
 

@@ -220,6 +220,7 @@ class GameBaseActivity : AppCompatActivity() {
                     newGame.observe(this, Observer { game ->
                         mDbRef.child(uid).child(key).setValue(game)
                     })
+                    Toast.makeText(applicationContext, "Added ${title.capitalize(Locale.ROOT)}", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(applicationContext, "Game Already Added", Toast.LENGTH_SHORT).show()
                 }

@@ -13,7 +13,7 @@
         <item name="android:colorBackground">@color/dark_12</item>
         <item name="colorOnBackground">@color/white</item>
 
-        <item name="colorSurface">@color/dark_34</item>
+        <item name="colorSurface">@color/dark_23</item>
         <item name="colorOnSurface">@color/white</item>
 
         <item name="colorError">@color/pink_500</item>

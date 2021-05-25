@@ -51,7 +51,6 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun signUp ()
     {
-        val username = findViewById<TextInputLayout>(R.id.userNameTextFieldR).editText?.text.toString()
         val email = findViewById<TextInputLayout>(R.id.emailTextFieldR).editText?.text.toString()
         val password = findViewById<TextInputLayout>(R.id.passwordTextFieldR).editText?.text.toString()
 

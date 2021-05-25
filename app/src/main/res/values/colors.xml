@@ -16,6 +16,8 @@
     <color name="purple_200">#c198ff</color>
     <color name="purple_50">#f2e6ff</color>
 
-    <color name="dark_12">#121212</color>
-    <color name="dark_34">#343434</color>
+    <color name="dark_12">#111111</color>
+    <color name="dark_23">#202020</color>
+    <color name="dark_34">#353535</color>
+
 </resources>
