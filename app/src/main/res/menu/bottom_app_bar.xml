@@ -4,13 +4,7 @@
 
 
     <group android:id="@+id/fav_and_pld">
-        <item
-            android:id="@+id/search"
-            android:icon="@drawable/ic_search"
-            android:title="@string/search"
-            android:contentDescription="@string/search"
-            app:showAsAction="ifRoom"
-            />
+
 
         <item
             android:id="@+id/favorite"
@@ -19,6 +13,7 @@
             android:contentDescription="@string/favorite"
             app:showAsAction="ifRoom"
             android:checkable="true"
+
             />
 
         <item
@@ -30,31 +25,6 @@
             android:checkable="true"
             />
     </group>
-    <group android:id="@+id/group_view">
-        <item
-            android:id="@+id/list_mode"
-            android:title="@string/list_mode"
-            android:contentDescription="@string/list_mode"
-            app:showAsAction="never"
-            android:checkable="true"
-            />
 
-        <item
-            android:id="@+id/dark_mode"
-            android:title="@string/dark_mode"
-            android:contentDescription="@string/dark_mode"
-            app:showAsAction="never"
-            android:checkable="true"
-            />
-    </group>
-
-    <group android:id="@+id/group_account">
-        <item
-            android:id="@+id/logout"
-            android:title="@string/logout"
-            android:contentDescription="@string/logout"
-            app:showAsAction="never"
-            />
-    </group>
 
 </menu>

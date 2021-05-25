@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/game_card"
-    android:layout_width="180dp"
+    android:layout_width="188dp"
     android:layout_height="wrap_content"
     android:layout_margin="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
         android:orientation="vertical">
 
         <ImageView
@@ -22,6 +22,8 @@
             android:id="@+id/game_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:text="@string/game_title"
             android:textSize="20sp" />
 
@@ -33,17 +35,15 @@
                 android:id="@+id/add_to_favorite"
                 android:layout_width="32dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:checkable="true"
                 android:contentDescription="@string/add_to_favorite_img_btn"
                 app:checkedIcon="@drawable/ic_favorite"
                 app:checkedIconTint="@color/pink_200"
-                app:chipBackgroundColor="@color/white"
                 app:chipIcon="@drawable/ic_unfavorite"
-                app:chipSurfaceColor="@color/purple_50"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/add_to_played"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.chip.Chip
@@ -52,17 +52,28 @@
                 android:layout_height="wrap_content"
 
 
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:checkable="true"
                 android:contentDescription="@string/add_to_favorite_img_btn"
                 app:checkedIcon="@drawable/ic_played"
                 app:checkedIconTint="@color/pink_200"
-                app:chipBackgroundColor="@color/white"
                 app:chipIcon="@drawable/ic_unplayed"
-                app:chipSurfaceColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/add_to_favorite"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/releaseYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="TextView"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

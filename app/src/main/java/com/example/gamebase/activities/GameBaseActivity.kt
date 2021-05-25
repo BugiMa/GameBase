@@ -1,5 +1,6 @@
 package com.example.gamebase.activities
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -13,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,9 +24,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gamebase.R
 import com.example.gamebase.model.GameData
 import com.example.gamebase.repository.GameRepository
-import com.example.gamebase.viewmodel.GameListAdapter
+import com.example.gamebase.viewmodel.GameGridAdapter
 import com.example.gamebase.viewmodel.MainViewModel
 import com.example.gamebase.viewmodel.MainViewModelFactory
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
@@ -42,10 +45,10 @@ class GameBaseActivity : AppCompatActivity() {
     private lateinit var mDatabase: FirebaseDatabase
     private lateinit var mDbRef: DatabaseReference
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var myAdapter: GameListAdapter
     private lateinit var gameList: ArrayList<GameData>
     private lateinit var newGame: MutableLiveData<GameData>
 
+    private lateinit var  topAppBar: MaterialToolbar
     private lateinit var bottomAppBar: BottomAppBar
     private lateinit var addGameFAB: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
@@ -87,8 +90,9 @@ class GameBaseActivity : AppCompatActivity() {
         val repository = GameRepository()
         val viewModelFactory = MainViewModelFactory(repository)
         mainViewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-        myAdapter = GameListAdapter(gameList, mDbRef, mainViewModel.listMode)
+        val myAdapter = GameGridAdapter(newGameList(), mDbRef)
 
+        topAppBar = findViewById(R.id.topAppBar)
         bottomAppBar = findViewById(R.id.bottomAppBar)
         addGameFAB = findViewById(R.id.addGameFAB)
         recyclerView = findViewById(R.id.recyclerViewGameList)
@@ -98,49 +102,30 @@ class GameBaseActivity : AppCompatActivity() {
         }
 
         iconCheckboxControl() // Function for Icon Tint / Checkbox State Control due to dark mode related restart of this activity
-        setRecycleViewAttr()
 
         //bottomAppBar.setNavigationOnClickListener {}
 
-        val searchItem = bottomAppBar.menu.findItem(R.id.search)
+        val searchItem = topAppBar.menu.findItem(R.id.search)
         searchView = searchItem.actionView as SearchView
-        // Changing location using searchView with onQueryTextSubmit function
         val queryTextListener = object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String): Boolean {
                 if (newText.isNotEmpty()) {
-                    myAdapter.filter.filter(newText)
+                    //myAdapter.filter.filter(newText)
+                    val filtered = gameList.filter{s -> s.title.toLowerCase(Locale.ROOT).contains(newText.toLowerCase(Locale.ROOT))} as ArrayList<GameData>
+                    val newAdapter = GameGridAdapter(filtered, mDbRef)
+                    recyclerView.adapter = newAdapter
                 }
                 return true }
             override fun onQueryTextSubmit(query: String): Boolean {
+                if (query.isNotEmpty()) { }
                 return true
             }
         }
         searchView.setOnQueryTextListener(queryTextListener)
 
-        bottomAppBar.setOnMenuItemClickListener { menuItem ->
+        topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.favorite -> {
-                    menuItem.isChecked = !menuItem.isChecked
-                    menuItemIconTintControl(menuItem)
-                    mainViewModel.isFavorite = menuItem.isChecked
-                    val newAdapter = GameListAdapter(newGameList(), mDbRef, mainViewModel.listMode)
-                    recyclerView.adapter = newAdapter
-                    true
-                }
-                R.id.played -> {
-                    menuItem.isChecked = !menuItem.isChecked
-                    menuItemIconTintControl(menuItem)
-                    mainViewModel.isPlayed = menuItem.isChecked
-                    val newAdapter = GameListAdapter(newGameList(), mDbRef, mainViewModel.listMode)
-                    recyclerView.adapter = newAdapter
-                    true
-                }
-                R.id.list_mode -> {
-                    menuItem.isChecked = !menuItem.isChecked
-                    mainViewModel.listMode = menuItem.isChecked
-                    setRecycleViewAttr()
-                    true
-                }
+
                 R.id.dark_mode -> {
 
                     if (this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
@@ -161,6 +146,28 @@ class GameBaseActivity : AppCompatActivity() {
             }
         }
 
+        bottomAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.favorite -> {
+                    menuItem.isChecked = !menuItem.isChecked
+                    menuItemIconTintControl(menuItem)
+                    mainViewModel.isFavorite = menuItem.isChecked
+                    val newAdapter = GameGridAdapter(newGameList(), mDbRef)
+                    recyclerView.adapter = newAdapter
+                    true
+                }
+                R.id.played -> {
+                    menuItem.isChecked = !menuItem.isChecked
+                    menuItemIconTintControl(menuItem)
+                    mainViewModel.isPlayed = menuItem.isChecked
+                    val newAdapter = GameGridAdapter(newGameList(), mDbRef)
+                    recyclerView.adapter = newAdapter
+                    true
+                }
+                else -> false
+            }
+        }
+
         addGameFAB.setOnClickListener {
 
             val builder = AlertDialog.Builder(this)
@@ -172,10 +179,10 @@ class GameBaseActivity : AppCompatActivity() {
                     LinearLayout.LayoutParams.MATCH_PARENT
             )
             val titleInput = textInputLayout("Title", this)
-            val noteInput = textInputLayout("Note", this)
+            //val noteInput = textInputLayout("Note", this)
 
             linearLayout.addView(titleInput)
-            linearLayout.addView(noteInput)
+            //linearLayout.addView(noteInput)
             linearLayout.orientation = LinearLayout.VERTICAL
             linearLayout.gravity = Gravity.CENTER
             builder.setView(linearLayout)
@@ -183,42 +190,46 @@ class GameBaseActivity : AppCompatActivity() {
             builder.setPositiveButton("Add") { _, _ ->
                 val key = Date().time.toString()
                 val title = titleInput.editText?.text.toString().toLowerCase(Locale.ROOT)
-                val note  = noteInput.editText?.text.toString()
+                val note  = "note" //noteInput.editText?.text.toString()
 
-                newGame = MutableLiveData(GameData(key = key, title = title, note = note))
+                if (!isAdded(title)) {
 
-                mainViewModel.getGame(title)
-                mainViewModel.gameResponse.observe(this, Observer{ response->
-                    if(response.isSuccessful){
-                        //Log.d("Response", response.body()!!.description)
-                        newGame.value = GameData(
-                            key,
-                            title.capitalize(Locale.ROOT),
-                            genre = response.body()?.genres?.get(0)?.name,
-                            releaseYear = response.body()?.released,
-                            studio = response.body()?.publishers?.get(0)?.name,
-                            description = response.body()?.description,
-                            note = note,
-                            imageUrl = response.body()?.background_image,
-                            favorite = false,
-                            played = false
-                        )
-                    } else{
-                        Log.e("Adding response failed", response.errorBody().toString())
-                        newGame.value = GameData(key = key, title = title, note = note)
-                    }
-                })
+                    newGame = MutableLiveData(GameData(key = key, title = title, note = note))
 
-                newGame.observe(this, Observer { game ->
-                    mDbRef.child(uid).child(key).setValue(game)
-                })
+                    mainViewModel.getGame(title.replace(' ', '-'))
+                    mainViewModel.gameResponse.observe(this, Observer{ response->
+                        if(response.isSuccessful){
+                            //Log.d("Response", response.body()!!.description)
+                            newGame.value = GameData(
+                                key,
+                                title,
+                                genre = response.body()?.genres?.get(0)?.name,
+                                releaseYear = response.body()?.released,
+                                //studio = response.body()?.publishers?.get(0)?.name,
+                                description = response.body()?.description,
+                                note = note,
+                                imageUrl = response.body()?.background_image,
+                                favorite = false,
+                                played = false
+                            )
+                        } else{
+                            Log.e("Adding response failed", response.errorBody().toString())
+                            newGame.value = GameData(key = key, title = title, note = note)
+                        }
+                    })
+                    newGame.observe(this, Observer { game ->
+                        mDbRef.child(uid).child(key).setValue(game)
+                    })
+                } else {
+                    Toast.makeText(applicationContext, "Game Already Added", Toast.LENGTH_SHORT).show()
+                }
             }
             builder.show()
         }
     }
 
     private fun setAdapter(gameList: ArrayList<GameData>){
-        recyclerView.adapter = GameListAdapter(gameList, mDbRef, mainViewModel.listMode)
+        recyclerView.adapter = GameGridAdapter(gameList, mDbRef)
     }
 
     private fun textInputLayout(hint: String, context: Context): TextInputLayout {
@@ -243,11 +254,14 @@ class GameBaseActivity : AppCompatActivity() {
         val b = (this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
         bottomAppBar.menu.getItem(0).isChecked = mainViewModel.listMode
         bottomAppBar.menu.getItem(1).isChecked = mainViewModel.listMode
-        bottomAppBar.menu.getItem(2).isChecked = mainViewModel.listMode
-        bottomAppBar.menu.getItem(3).isChecked = b
+        topAppBar.menu.getItem(1).isChecked = mainViewModel.listMode
+        topAppBar.menu.getItem(2).isChecked = b
         menuItemIconTintControl(bottomAppBar.menu.getItem(0))
         menuItemIconTintControl(bottomAppBar.menu.getItem(1))
-        if (b) bottomAppBar.setBackgroundColor(resources.getColor(R.color.dark_34))
+        if (b) {
+            bottomAppBar.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_34))
+            topAppBar.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_34))
+        }
     }
 
     private fun newGameList(): ArrayList<GameData> {
@@ -268,13 +282,12 @@ class GameBaseActivity : AppCompatActivity() {
             menuItem.icon.alpha = 127
     }
 
-    private fun setRecycleViewAttr()
-    {
-        val newAdapter = GameListAdapter(newGameList(), mDbRef, mainViewModel.listMode)
-        val newLayoutManager = if (mainViewModel.listMode)  GridLayoutManager(this@GameBaseActivity, 2, LinearLayoutManager.VERTICAL, false)
-        else LinearLayoutManager(this@GameBaseActivity)
-        recyclerView.adapter = newAdapter
-        recyclerView.layoutManager = newLayoutManager
+    private fun isAdded(title: String): Boolean {
+        var r = false
+        for (game in gameList) {
+            if (game.title.equals(title, ignoreCase = true)) r = true
+        }
+        return r
     }
 
 }

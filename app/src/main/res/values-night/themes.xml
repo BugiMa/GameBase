@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.GameBase" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
-        <item name="colorPrimary">@color/green_200</item>
+        <item name="colorPrimary">@color/green_700</item>
         <item name="colorPrimaryVariant">@color/dark_34</item>
         <item name="colorOnPrimary">@color/white</item>
 

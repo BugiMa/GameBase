@@ -5,7 +5,7 @@ data class GameData(
         val title:       String = "",
         var genre:       String? = "",
         var releaseYear: String? = "",
-        val studio:      String? = "",
+        //val studio:      String? = "",
         val description: String? = "",
         val note:        String? = "",
         var imageUrl:    String? = "",

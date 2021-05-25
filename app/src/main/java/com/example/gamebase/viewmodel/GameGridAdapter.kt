@@ -10,6 +10,7 @@ import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gamebase.R
 import com.example.gamebase.model.GameData
@@ -21,27 +22,26 @@ import com.squareup.picasso.Picasso
 import java.util.*
 import kotlin.collections.ArrayList
 
-class GameListAdapter(
-        var games: ArrayList<GameData>,
-        var databaseReference: DatabaseReference,
-        var isListModeOn: Boolean
-    ): RecyclerView.Adapter<GameListAdapter.GameHolder>(), Filterable {
+class GameGridAdapter(
+    var games: ArrayList<GameData>,
+    var databaseReference: DatabaseReference,
+): RecyclerView.Adapter<GameGridAdapter.GameHolder>(), Filterable {
     private lateinit var view: View
 
     inner class GameHolder(view: View): RecyclerView.ViewHolder(view) {
 
+        //Grid item
         var card: MaterialCardView = itemView.findViewById(R.id.game_card)
         var boxArt: ImageView = itemView.findViewById(R.id.game_box_art)
         var title: TextView = itemView.findViewById(R.id.game_title)
-        var producer: TextView = itemView.findViewById(R.id.game_producer)
+        var year: TextView = itemView.findViewById(R.id.releaseYear)
         var favorite: Chip = itemView.findViewById(R.id.add_to_favorite)
         var played: Chip = itemView.findViewById(R.id.add_to_played)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameHolder {
-        view = LayoutInflater.from(parent.context).inflate(
-            R.layout.fragment_item_card_view, parent,false )
+
+        view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_item_card_view, parent, false)
         return GameHolder(view)
     }
 
@@ -50,11 +50,14 @@ class GameListAdapter(
         val game = games[position]
 
         holder.title.text = game.title.toLowerCase(Locale.ROOT).capitalize(Locale.ROOT)
-        holder.producer.text = game.studio
+        holder.year.text = game.genre
         holder.played.isChecked = game.played
         holder.favorite.isChecked = game.favorite
-        if(games[position].imageUrl != "") {
+
+        if(!games[position].imageUrl.isNullOrBlank()) {
             Picasso.with(holder.itemView.context).load(games[position].imageUrl).into(holder.boxArt)
+        } else {
+            holder.boxArt.setImageResource(R.drawable.ic_no_image)
         }
 
         holder.played.setOnCheckedChangeListener { _, isChecked ->
@@ -80,7 +83,7 @@ class GameListAdapter(
     }
 
     override fun getItemCount(): Int {
-       return games.size
+        return games.size
     }
 
     override fun getFilter(): Filter {
@@ -115,5 +118,4 @@ class GameListAdapter(
 
 
 }
-
 
