@@ -23,6 +23,14 @@
 
     <group android:id="@+id/group_account">
         <item
+            android:id="@+id/fingerprint"
+            android:title="@string/fingerprint_authentication"
+            android:checkable="true"
+            android:contentDescription="@string/fingerprint_authentication"
+            app:showAsAction="never"
+            />
+
+        <item
             android:id="@+id/logout"
             android:title="@string/logout"
             android:contentDescription="@string/logout"

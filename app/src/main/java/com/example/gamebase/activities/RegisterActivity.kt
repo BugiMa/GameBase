@@ -8,6 +8,8 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import com.example.gamebase.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -16,6 +18,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import java.util.concurrent.Executor
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -26,11 +29,18 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
+    private var isFinger: Boolean = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
         auth = FirebaseAuth.getInstance()
+        isFinger = intent.getBooleanExtra("isFinger", false)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -45,8 +55,50 @@ class RegisterActivity : AppCompatActivity() {
         val agreeCheckBox        = findViewById<CheckBox>(R.id.agreeCheckbox)
         registerButton.setOnClickListener      { signUp() }
         goToLoginButton.setOnClickListener     { goToLogin() }
-        registerGoogleButton.setOnClickListener{ signInViaGoogle() }
+        registerGoogleButton.setOnClickListener{
+
+            if (isFinger) {
+                biometricPrompt.authenticate(promptInfo)
+            } else {
+                signInViaGoogle()
+            }
+        }
         agreeCheckBox.setOnClickListener       { agreeTaC() }
+
+        executor = ContextCompat.getMainExecutor(this)
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int,
+                                                   errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(applicationContext,
+                        "Authentication error: $errString", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onAuthenticationSucceeded(
+                    result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    signInViaGoogle()
+                    Toast.makeText(applicationContext,
+                        "Authentication succeeded!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(applicationContext, "Authentication failed",
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
+
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Fingerprint Authentication")
+            .setSubtitle("Log in using your finger. You can turn it off in settings after You log in.")
+            .setNegativeButtonText("Use account password")
+            .build()
+
     }
 
     private fun signUp ()
@@ -75,6 +127,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun goToLogin()
     {
         val intentRegister = Intent(this, LoginActivity::class.java)
+        intentRegister.putExtra("isFinger", isFinger)
         startActivity(intentRegister)
     }
 

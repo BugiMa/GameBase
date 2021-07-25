@@ -13,6 +13,7 @@ class MainViewModel( private val gameRepository: GameRepository) : ViewModel() {
     var listMode = false
     var isPlayed = false
     var isFavorite = false
+    var isFinger = true
 
     val gameResponse: MutableLiveData<Response<GameDataAPI>> = MutableLiveData()
 

@@ -1,6 +1,5 @@
 package com.example.gamebase.activities
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -53,9 +52,6 @@ class GameBaseActivity : AppCompatActivity() {
     private lateinit var addGameFAB: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
-
-    //private var mainViewModel.isPlayed: Boolean = false
-    //private var mainViewModel.isFavorite: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,9 +131,15 @@ class GameBaseActivity : AppCompatActivity() {
                     }
                     true
                 }
+                R.id.fingerprint -> {
+                    menuItem.isChecked = !menuItem.isChecked
+                    mainViewModel.isFinger = menuItem.isChecked
+                    true
+                }
                 R.id.logout -> {
                     auth.signOut()
                     val intentLogin = Intent(this, LoginActivity::class.java)
+                    intentLogin.putExtra("isFinger", mainViewModel.isFinger)
                     startActivity(intentLogin)
                     finish()
                     true
@@ -253,10 +255,10 @@ class GameBaseActivity : AppCompatActivity() {
 
     private fun iconCheckboxControl() {
         val b = (this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
-        bottomAppBar.menu.getItem(0).isChecked = mainViewModel.listMode
-        bottomAppBar.menu.getItem(1).isChecked = mainViewModel.listMode
-        topAppBar.menu.getItem(1).isChecked = mainViewModel.listMode
-        topAppBar.menu.getItem(2).isChecked = b
+        //bottomAppBar.menu.getItem(0).isChecked = mainViewModel.isFavorite
+        //bottomAppBar.menu.getItem(1).isChecked = mainViewModel.isPlayed
+        topAppBar.menu.getItem(1).isChecked = b
+        topAppBar.menu.getItem(2).isChecked = mainViewModel.isFinger
         menuItemIconTintControl(bottomAppBar.menu.getItem(0))
         menuItemIconTintControl(bottomAppBar.menu.getItem(1))
         if (b) {

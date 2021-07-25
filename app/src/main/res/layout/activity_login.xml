@@ -127,14 +127,16 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="12dp"
                 android:gravity="center"
-                android:text="@string/or_login_via_google_account" />
+                android:text="@string/or_login_via_google_account_or_finger" />
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/LoginGoogleButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginBottom="16dp"
-                android:src="@drawable/common_google_signin_btn_icon_dark"/>
+
+                <ImageButton
+                    android:id="@+id/LoginGoogleButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/common_google_signin_btn_icon_dark"
+                    android:contentDescription="@string/or_login_via_google_account"
+                    android:layout_marginBottom="16dp"/>
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
